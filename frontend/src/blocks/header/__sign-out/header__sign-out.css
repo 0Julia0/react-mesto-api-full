@@ -1,0 +1,23 @@
+.header__sign-out {
+    background: transparent;
+    text-decoration: none;
+    color: #A9A9A9;
+    font-size: 18px;
+    line-height: 22px;
+    display: block;
+    border: none;
+    height: 22px;
+}
+
+.header__sign-out:hover {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: .3s;
+}
+
+@media screen and (max-width: 930px) {
+    .header__sign-out {
+        margin-top: 28px;
+        margin-right: 30px;
+    }
+}

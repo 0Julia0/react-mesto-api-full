@@ -1,0 +1,9 @@
+.element__number {
+    margin: 0;
+    padding-left: 8px;
+    padding-bottom: 22px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+}
