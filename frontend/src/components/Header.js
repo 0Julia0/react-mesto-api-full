@@ -6,21 +6,21 @@ function Header({ onSignOut, email }) {
   return (
     <header className="header">
       <img src={logo} alt="Место" className="header__logo" />
-      <Route path="/main">
+      <Route path="/">
         <div className="header__container">
         <p className="header__email">{email}</p>
-        <button onClick={onSignOut} to={"sign-up"} className="header__sign-out">
+        <button onClick={onSignOut} to="/signup" className="header__sign-out">
           Выйти
         </button>
         </div>
       </Route>
-      <Route path="/sign-in">
-        <Link to={"sign-up"} className="header__sign">
+      <Route path="/signin">
+        <Link to="/signup" className="header__sign">
           Регистрация
         </Link>
       </Route>
-      <Route path="/sign-up">
-        <Link to={"sign-in"} className="header__sign">
+      <Route path="/signup">
+        <Link to="/signin" className="header__sign">
           Войти
         </Link>
       </Route>

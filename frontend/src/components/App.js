@@ -157,7 +157,7 @@ const handleRegister = ({ password, email }) => {
   return auth.register(password, email)
   .then((res) => {
     setIsSuccessfulReg(true);
-    history.push('/sign-in')
+    history.push('/signin')
     return res
   })
   .catch((err) => {
@@ -180,7 +180,7 @@ const handleLogin = ({ password, email }) => {
       localStorage.setItem('jwt', res.token )
       setLoggedIn(true)
     }
-    history.push('/main')
+    history.push('/')
     })
     .catch((err) => {
       console.log(err);
@@ -199,11 +199,11 @@ const tokenCheck = React.useCallback(() => {
           email: res.data.email
         })
         setLoggedIn(true);
-        history.push('/main')
+        history.push('/')
       })
     .catch((err) => {
       console.log(err);
-      history.push('/sign-in')
+      history.push('/signin')
     });
 }, [history])
 
@@ -214,7 +214,7 @@ React.useEffect(() => {
 const handleSignOut = () => {
   localStorage.removeItem('jwt')
   setLoggedIn(false)
-  history.push('/sign-in')
+  history.push('/signin')
 }
 
   return (
@@ -222,7 +222,7 @@ const handleSignOut = () => {
     <div className="page">
         <Header onSignOut={handleSignOut} loggedIn={loggedIn} email={initialData.email}/>
         <Switch>
-          <ProtectedRoute path="/main"
+          <ProtectedRoute path="/"
             component={Main}
             loggedIn={loggedIn}
             onEditAvatar={handleEditAvatarClick}
@@ -233,14 +233,14 @@ const handleSignOut = () => {
             onCardDelete={handleDeleteCardClick}
             cards={cards}
           />
-          <Route path="/sign-up">
+          <Route path="/signup">
             <Register onRegister={handleRegister}/>
           </Route>
-          <Route path="/sign-in">
+          <Route path="/signin">
             <Login onLogin={handleLogin}/>
           </Route>
           <Route path="/">
-                {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
+                {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
               </Route>
         </Switch>
         {loggedIn && <Footer />}

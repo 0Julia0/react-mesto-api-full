@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 
 function Register({ onRegister }) {
   const registerData = {
@@ -43,7 +43,7 @@ function Register({ onRegister }) {
         <button className="start-page__button" type="submit">
           Зарегистрироваться
         </button>
-        <Link className="start-page__link" to="/sign-in">
+        <Link className="start-page__link" to="/signin">
           Уже зарегистрированы? Войти
         </Link>
       </form>
