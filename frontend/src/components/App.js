@@ -29,8 +29,8 @@ function App() {
   const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [initialData, setInitialData] = React.useState({
-    password: '',
-    email: ''
+    email: '',
+    password: ''
   })
   const [isSuccessfulReg, setIsSuccessfulReg] = React.useState(false);
   const history = useHistory();
@@ -46,7 +46,7 @@ function App() {
         console.log(err);
       })
    }
- }, [loggedIn]); 
+ }, [loggedIn]);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -108,7 +108,7 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
     api.changeLikeCardStatus(card._id, isLiked)
     .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
@@ -153,8 +153,8 @@ function handleDeleteCardClick(card) {
   setCardDelete(card);
 }
 
-const handleRegister = ({ password, email }) => {
-  return auth.register(password, email)
+const handleRegister = ({ email, password }) => {
+  return auth.register(email, password)
   .then((res) => {
     setIsSuccessfulReg(true);
     history.push('/signin')
@@ -169,17 +169,14 @@ const handleRegister = ({ password, email }) => {
   })
 }
 
-const handleLogin = ({ password, email }) => {
-  return auth.authorize(password, email)
-  .then(res => {
-    if (res.token) {
-      setInitialData({
-        password: password,
-        email: email
-      })
-      localStorage.setItem('jwt', res.token )
-      setLoggedIn(true)
-    }
+const handleLogin = (data) => {
+  return auth.authorize(data)
+  .then((res) => {
+    setInitialData({
+      email: res.email,
+      password: res.password
+    })
+    setLoggedIn(true)
     history.push('/')
     })
     .catch((err) => {
@@ -188,18 +185,14 @@ const handleLogin = ({ password, email }) => {
 }
 
 const tokenCheck = React.useCallback(() => {
-  const jwt = localStorage.getItem('jwt')
-  if (!jwt) {
-    return
-  }
-    auth.getContent(jwt)
+    auth.getContent()
     .then((res) => {
       setInitialData({
-          password: res.data.password,
-          email: res.data.email
-        })
-        setLoggedIn(true);
-        history.push('/')
+        email: res.email,
+        password: res.password
+      })
+      setLoggedIn(true);
+      history.push('/')
       })
     .catch((err) => {
       console.log(err);
@@ -212,7 +205,6 @@ React.useEffect(() => {
 }, [tokenCheck])
 
 const handleSignOut = () => {
-  localStorage.removeItem('jwt')
   setLoggedIn(false)
   history.push('/signin')
 }
@@ -222,7 +214,7 @@ const handleSignOut = () => {
     <div className="page">
         <Header onSignOut={handleSignOut} loggedIn={loggedIn} email={initialData.email}/>
         <Switch>
-          <ProtectedRoute path="/"
+          <ProtectedRoute exact path="/"
             component={Main}
             loggedIn={loggedIn}
             onEditAvatar={handleEditAvatarClick}
@@ -239,12 +231,13 @@ const handleSignOut = () => {
           <Route path="/signin">
             <Login onLogin={handleLogin}/>
           </Route>
-          <Route path="/">
-                {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
-              </Route>
+          <Route>
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
+          </Route>
         </Switch>
-        {loggedIn && <Footer />}
-
+        <Route path="/" exact>
+          <Footer />
+        </Route>
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}

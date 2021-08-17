@@ -1,43 +1,37 @@
 import React from "react";
 
 function Login({ onLogin }) {
-  const loginData = {
-    password: '',
-    email: ''
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  function handleChangeEmail(evt){
+    setEmail(evt.target.value);
   }
-  const [data, setData] = React.useState(loginData)
 
-    const handleChange = (e) => {
-      const { name, value } = e.target
-      setData(data => ({
-        ...data,
-        [name]: value,
-      }))
-    }
+  function handleChangePassword(evt) {
+    setPassword(evt.target.value);
+  }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        if (!data.email|| !data.password) {
-          return
-        }
-        onLogin(data)
-    }
+  function handleLoginSubmit(evt) {
+    evt.preventDefault();
+    onLogin({ email, password });
+  }
 
     return (
-      <form className="start-page" name="form" onSubmit={handleSubmit}>
+      <form className="start-page" name="form" onSubmit={handleLoginSubmit}>
         <h2 className="start-page__title">Вход</h2>
         <input
           className="start-page__input"
-          value={data.email}
-          onChange={handleChange}
+          value={email}
+          onChange={handleChangeEmail}
           name="email"
           placeholder="Email"
           type="email"
         />
         <input
           className="start-page__input"
-          value={data.password}
-          onChange={handleChange}
+          value={password}
+          onChange={handleChangePassword}
           name="password"
           placeholder="Пароль"
           type="password"
