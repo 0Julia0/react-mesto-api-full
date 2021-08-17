@@ -5,6 +5,7 @@ const User = require('../models/user');
 const BadRequestError = require('../errors/badRequestError');
 const NotFoundError = require('../errors/notFoundError');
 const ServerError = require('../errors/serverError');
+const UnauthorizedError = require('../errors/unauthorizedError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -16,7 +17,7 @@ const getUsers = (req, res, next) => {
       if (!user) {
         throw new ServerError('На сервере произошла ошибка.');
       }
-      return res.send({ data: user });
+      return res.send(user);
     })
     .catch(next);
 };
@@ -27,7 +28,7 @@ const getUserInfo = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден.');
       }
-      res.send({ data: user });
+      res.send(user);
     })
     .catch(next);
 };
@@ -38,7 +39,7 @@ const getUserById = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с указанным _id не найден.');
       }
-      res.send({ data: user });
+      res.send(user);
     })
     .catch(next);
 };
@@ -58,7 +59,7 @@ const updateUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с указанным _id не найден.');
       }
-      res.send({ data: user });
+      res.send(user);
     })
     .catch(next);
 };
@@ -77,7 +78,7 @@ const updateAvatar = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с указанным _id не найден.');
       }
-      res.send({ data: user });
+      res.send(user);
     })
     .catch(next);
 };
@@ -88,9 +89,6 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       email: req.body.email,
       password: hash,
-      name: req.body.name,
-      about: req.body.about,
-      avatar: req.body.avatar,
     }))
     .then((user) => {
       res.status(201).send({
@@ -109,7 +107,10 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      res.cookie(
+      if (!user) {
+        throw next(new UnauthorizedError('Не правильная почта или пароль'));
+      }
+      return res.cookie(
         'jwt',
         {
           token: jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {

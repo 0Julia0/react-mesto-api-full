@@ -11,7 +11,7 @@ const getCards = (req, res, next) => {
       if (!cards) {
         throw new ServerError('На сервере произошла ошибка.');
       }
-      return res.send({ data: cards });
+      return res.send(cards);
     })
     .catch(next);
 };
@@ -19,7 +19,7 @@ const getCards = (req, res, next) => {
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         throw new BadRequestError('Переданы некорректные данные при создании карточки.');
@@ -39,7 +39,7 @@ const deleteCard = (req, res, next) => {
         throw new ForbiddenError('У вас не прав на удаление этой карточки.');
       }
       Card.findByIdAndRemove(req.params.cardId);
-      return res.send({ data: card });
+      return res.send(card);
     })
     .catch(next);
 };
@@ -56,7 +56,7 @@ const likeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена.');
       }
-      res.send({ data: card });
+      res.send(card);
     })
     .catch(next);
 };
@@ -73,7 +73,7 @@ const dislikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена.');
       }
-      res.send({ data: card });
+      res.send(card);
     })
     .catch(next);
 };
