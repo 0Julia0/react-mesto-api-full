@@ -11,7 +11,7 @@ class Api {
   }
 
     getInitialCards() {
-      return fetch(`${this._baseUrl}cards`, {
+      return fetch(`${this._baseUrl}/cards`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ class Api {
   }
 
   getUserInfo(){
-    return fetch(`${this._baseUrl}users/me`, {  
+    return fetch(`${this._baseUrl}/users/me`, {  
       method: 'GET',  
       headers: {
       'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ class Api {
 }
 
   postCard(data) {
-    return fetch(`${this._baseUrl}cards`, {
+    return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ class Api {
   }
 
   deleteCard(data) {
-    return fetch(`${this._baseUrl}cards/${data}`, {
+    return fetch(`${this._baseUrl}/cards/${data}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ class Api {
 }
 
 patchProfileAvatar(data){
-  return fetch(`${this._baseUrl}users/me/avatar`, {
+  return fetch(`${this._baseUrl}/users/me/avatar`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ patchProfileAvatar(data){
 }
 
 changeLikeCardStatus(id, isLiked) {
-  return fetch(`${this._baseUrl}cards/${id}/likes`, {
+  return fetch(`${this._baseUrl}/cards/${id}/likes`, {
     method: isLiked ? 'DELETE' : 'PUT',
     headers: {
       'Content-Type': 'application/json'
@@ -93,7 +93,7 @@ changeLikeCardStatus(id, isLiked) {
 }
 
 const api = new Api({
-    baseUrl: "https://api.julia.p.nomoredomains.monster/",
+    baseUrl: "https://api.julia.p.nomoredomains.monster",
   });
 
 export default api;
