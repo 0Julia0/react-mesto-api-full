@@ -18,8 +18,6 @@ const { PORT = 3000 } = process.env;
 const whitelist = [
   'http://localhost:3000',
   'https://localhost:3000',
-  'http://localhost:2000',
-  'https://localhost:2000',
   'https://julia.p.nomoredomains.club',
   'http://julia.p.nomoredomains.club',
   'https://api.julia.p.nomoredomains.monster',
