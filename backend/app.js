@@ -36,6 +36,7 @@ const corsOption = {
 
 const app = express();
 
+app.use(cookieParser());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -48,8 +49,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
-
-app.use(cookieParser());
 
 app.use(requestLogger);
 
