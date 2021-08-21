@@ -18,6 +18,8 @@ const { PORT = 3000 } = process.env;
 const whitelist = [
   'http://localhost:3000',
   'https://localhost:3000',
+  'http://localhost:2000',
+  'https://localhost:2000',
   'https://julia.p.nomoredomains.club',
   'http://julia.p.nomoredomains.club',
   'https://api.julia.p.nomoredomains.monster',
@@ -36,7 +38,6 @@ const corsOption = {
 
 const app = express();
 
-app.use(cookieParser());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -49,6 +50,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
+
+app.use(cookieParser());
 
 app.use(requestLogger);
 
@@ -75,13 +78,12 @@ app.use(auth);
 
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
-
-app.use(errorLogger);
-app.use(errors());
-
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден.' });
 });
+
+app.use(errorLogger);
+app.use(errors());
 
 app.use((err, req, res, next) => {
   res.status(err.statusCode).send({ message: err.message });
