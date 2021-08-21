@@ -23,7 +23,7 @@ class Api {
 
   getUserInfo(){
     return fetch(`${this._baseUrl}/users/me`, {  
-      method: 'GET',  
+      method: 'GET',
       headers: {
       'Content-Type': 'application/json'
     },
@@ -56,7 +56,7 @@ class Api {
   }
 
   patchProfileInfo(data){
-    return fetch(`${this._baseUrl}users/me`, {
+    return fetch(`${this._baseUrl}/users/me`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
