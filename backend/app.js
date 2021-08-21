@@ -71,6 +71,9 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(/^(http|https):\/\/[a-z0-9\-._~:/?#[\]@!$&'()*+,;=]/),
   }),
 }), createUser);
 
@@ -78,15 +81,17 @@ app.use(auth);
 
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден.' });
-});
 
 app.use(errorLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  res.status(err.statusCode).send({ message: err.message });
+  res.status(err.statusCode)
+    .send({
+      message: err.statusCode === 500
+        ? 'На сервере произошла ошибка.'
+        : err.message,
+    });
   next();
 });
 
