@@ -38,8 +38,8 @@ const deleteCard = (req, res, next) => {
       if (card.owner.toString() !== req.user._id.toString()) {
         throw new ForbiddenError('У вас не прав на удаление этой карточки.');
       }
-      Card.findByIdAndRemove(req.params.cardId);
-      return res.send(card);
+      return Card.findByIdAndRemove(req.params.cardId)
+        .then(() => res.status(200).send({ message: 'Карточка удалена.' }));
     })
     .catch(next);
 };

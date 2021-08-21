@@ -6,6 +6,7 @@ const BadRequestError = require('../errors/badRequestError');
 const NotFoundError = require('../errors/notFoundError');
 const ServerError = require('../errors/serverError');
 const UnauthorizedError = require('../errors/unauthorizedError');
+const ConflictingRequest = require('../errors/conflictingRequest');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -89,14 +90,28 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       email: req.body.email,
       password: hash,
+      name: req.body.name,
+      about: req.body.about,
+      avatar: req.body.avatar,
     }))
     .then((user) => {
+      if (user) {
+        throw new ConflictingRequest('Пользователь с таким e-mail существует');
+      }
       res.status(201).send({
         _id: user._id,
         email: user.email,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
       });
     })
-    .catch(next);
+    .catch((error) => {
+      if (error.name === 'ValidationError') {
+        return next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
+      }
+      return next(error);
+    });
 };
 
 const login = (req, res, next) => {
@@ -123,7 +138,7 @@ const login = (req, res, next) => {
           samesire: true,
         },
       )
-        .send(user);
+        .send({ user: { email, password } });
     })
     .catch(next);
 };
