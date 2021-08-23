@@ -86,42 +86,34 @@ const updateAvatar = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const {
-    name,
-    about,
-    avatar,
-    email,
-    password,
+    name, about, avatar, email, password,
   } = req.body;
-
   User.findOne({ email })
-    .then((userEmail) => {
-      if (userEmail) {
-        throw new ConflictingRequest('Такой пользователь уже существует');
+    .then((data) => {
+      if (data) {
+        throw new ConflictingRequest('Пользователь с таким email уже существует');
       }
-      bcrypt
-        .hash(password, SALT_ROUNDS)
-        .then((hash) => User.create({
-          email,
-          password: hash,
-          name,
-          about,
-          avatar,
-        }))
-        .then((user) => {
-          res.status(201).send({
-            _id: user._id,
-            email: user.email,
-            name: user.name,
-            about: user.about,
-            avatar: user.avatar,
-          });
-        })
-        .catch((error) => {
-          if (error.name === 'ValidationError') {
-            return next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
-          }
-          return next(error);
-        });
+      return bcrypt.hash(password, SALT_ROUNDS);
+    })
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
+    .then((user) => res.status(200).send({
+      _id: user._id,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+    }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        throw new BadRequestError('Переданы некорректные данные при создании пользователя.');
+      }
+      next(err);
     });
 };
 
