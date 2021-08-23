@@ -93,22 +93,22 @@ const createUser = (req, res, next) => {
       if (data) {
         throw new ConflictingRequest('Пользователь с таким email уже существует');
       }
-      return bcrypt.hash(password, SALT_ROUNDS);
+      return bcrypt.hash(password, SALT_ROUNDS)
+        .then((hash) => User.create({
+          name,
+          about,
+          avatar,
+          email,
+          password: hash,
+        }))
+        .then((user) => res.status(201).send({
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+        }));
     })
-    .then((hash) => User.create({
-      name,
-      about,
-      avatar,
-      email,
-      password: hash,
-    }))
-    .then((user) => res.status(201).send({
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Переданы некорректные данные при создании пользователя.');
