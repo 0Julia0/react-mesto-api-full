@@ -5,4 +5,4 @@ https://julia.p.nomoredomains.club/ - ссылка на сайт
 
 https://api.julia.p.nomoredomains.monster/ - ссылка на домен
 
-178.154.254.58 - публичный IP
+178.154.255.226 - публичный IP
