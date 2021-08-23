@@ -86,11 +86,14 @@ app.use(errorLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  res.status(err.statusCode)
+  const { statusCode = 500, message } = err;
+
+  res
+    .status(statusCode)
     .send({
-      message: err.statusCode === 500
+      message: statusCode === 500
         ? 'На сервере произошла ошибка.'
-        : err.message,
+        : message,
     });
   next();
 });
