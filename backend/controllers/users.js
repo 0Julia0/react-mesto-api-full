@@ -113,8 +113,8 @@ const createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Переданы некорректные данные при создании пользователя.');
       }
-      next(err);
-    });
+    })
+    .catch(next);
 };
 
 const login = (req, res, next) => {
