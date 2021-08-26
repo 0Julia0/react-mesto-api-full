@@ -16,32 +16,20 @@ const NotFoundError = require('./errors/notFoundError');
 
 const { PORT = 3000 } = process.env;
 
-const whitelist = [
-  'http://localhost:3000',
-  'https://localhost:3000',
-  'https://julia.p.nomoredomains.club',
-  'http://julia.p.nomoredomains.club',
-  'https://api.julia.p.nomoredomains.monster',
-  'http://api.julia.p.nomoredomains.monster',
-];
-const corsOption = {
-  credentials: true,
-  origin: function checkCorsList(origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
-
 const app = express();
+const corsOptions = {
+  origin: ['https://julia.p.nomoredomains.club',
+    'http://julia.p.nomoredomains.club',
+    'localhost:3000',
+    'http://192.168.1.177:3000',
+    'http://localhost:3000',
+  ],
+  credentials: true,
+};
 
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.use(cors(corsOption));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -53,6 +41,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(cookieParser());
 
 app.use(requestLogger);
+
+app.use(cors(corsOptions));
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -101,3 +91,4 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT);
+
