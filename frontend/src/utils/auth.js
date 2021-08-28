@@ -7,7 +7,7 @@ const checkResponse = (res) => {
   return res.json();
 };
 
-export const register = (data) => {
+export const register = (email, password) => {
     return fetch(`${BASE_URL}/signup`, {
       method: 'POST',
       headers: {
@@ -16,8 +16,8 @@ export const register = (data) => {
       },
       credentials: 'include',
       body: JSON.stringify({
-        "email": data.email,
-        "password": data.password,
+        "email": email,
+        "password": password,
       }),
     })
     .then(res => checkResponse(res));
