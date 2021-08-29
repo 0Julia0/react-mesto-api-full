@@ -88,22 +88,25 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  User.findOne({ email })
+  return User.findOne({ email })
     .then((data) => {
       if (data) {
         throw new ConflictingRequest('Пользователь с таким email уже существует');
       }
       return bcrypt.hash(password, SALT_ROUNDS)
         .then((hash) => User.create({
+          email,
+          password: hash,
           name,
           about,
           avatar,
-          email,
-          password: hash,
         }))
         .then((user) => res.status(201).send({
           _id: user._id,
           email: user.email,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
         }));
     })
     .catch((err) => {
