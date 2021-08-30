@@ -140,7 +140,7 @@ const login = (req, res, next) => {
         {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
-          samesire: true,
+          sameSite: true,
         },
       )
         .send({ user: { email, password } });
